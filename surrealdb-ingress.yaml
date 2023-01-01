@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: surrealdb
+  namespace: surrealdb
+spec:
+  rules:
+    - host: "<your domain here>"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: surrealdb
+                port:
+                  number: 8000

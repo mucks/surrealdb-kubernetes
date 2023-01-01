@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: surrealdb
+  namespace: surrealdb
+  labels:
+    app: surrealdb
+spec:
+  containers:
+    - name: surrealdb
+      image: surrealdb/surrealdb:latest
+      envFrom:
+        - secretRef:
+            name: surrealdb-secret
+      args:
+        [
+          "start",
+          "--user",
+          "$(ROOT_USER)",
+          "--pass",
+          "$(ROOT_PASS)",
+          "file://surreal.db",
+        ]
+      volumeMounts:
+        - name: surrealdb-pvc
+          mountPath: /surreal.db
+      resources:
+        limits:
+          memory: "512Mi"
+          cpu: "500m"
+      ports:
+        - containerPort: 8000
+  volumes:
+    - name: surrealdb-pvc
+      persistentVolumeClaim:
+        claimName: surrealdb-pvc
